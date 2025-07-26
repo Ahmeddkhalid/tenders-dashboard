@@ -16,7 +16,7 @@ if 'selected_date' not in st.session_state:
     st.session_state.selected_date = datetime.today().date()
 
 # Load JSON data
-json_file = r"output\tender_opportunities.json"
+json_file = "output/tender_opportunities.json"
 
 # Location mapping (latitude and longitude for UK regions)
 uk_location_mapping = {
