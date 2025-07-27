@@ -281,7 +281,7 @@ if st.session_state.selected_cpv in cpv_options:
     current_cpv_index = cpv_options.index(st.session_state.selected_cpv)
 
 selected_cpv = st.sidebar.selectbox(
-    "Select CPV Code", 
+    "Select or Search CPV(s)", 
     options=cpv_options, 
     index=current_cpv_index,
     key="cpv_selectbox"
@@ -577,12 +577,6 @@ if not filtered_df.empty:
 else:
     st.info("No tenders match the current filters.")
 
-# Display filter summary
-st.sidebar.divider()
-st.sidebar.subheader("📊 Filter Summary")
-st.sidebar.write(f"**CPV Filter:** {selected_cpv}")
-st.sidebar.write(f"**Date Filter:** From {selected_date}")
-st.sidebar.write(f"**Results:** {len(filtered_df)} tenders")
 
 if not filtered_df.empty:
     try:
