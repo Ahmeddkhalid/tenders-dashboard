@@ -146,28 +146,34 @@ def apply_filters(df, events, selected_cpv, selected_date):
     return filtered_df, filtered_events
 
 def create_timeline_chart(df):
-    """Create a timeline chart showing tender deadlines"""
+    """Create a timeline chart showing tender deadlines for six months"""
     if df.empty:
         return None
     
-    # Group by date for better visualization
-    daily_counts = df.groupby(df['deadline'].dt.date).size().reset_index()
-    daily_counts.columns = ['date', 'count']
+     # Filter tenders with deadlines within the next six months
+    today = pd.Timestamp(datetime.today())
+    six_months_later = today + pd.DateOffset(months=6)
+    df_six_months = df[(df['deadline'] >= today) & (df['deadline'] <= six_months_later)]
     
+    # Group by month for better visualization
+    monthly_counts = df_six_months.groupby(df_six_months['deadline'].dt.to_period('M')).size().reset_index()
+    monthly_counts.columns = ['Month', 'Tender Count']
+    monthly_counts['Month'] = monthly_counts['Month'].dt.to_timestamp()
+
     fig = px.bar(
-        daily_counts, 
-        x='date', 
-        y='count',
-        title='Tender Deadlines Over Time',
-        labels={'date': 'Deadline Date', 'count': 'Number of Tenders'},
-        color='count',
+        monthly_counts,
+        x='Month', 
+        y='Tender Count',
+        title='Tender Deadlines Over the Next Six Months',
+        labels={'Month': 'Deadline Month', 'Tender Count': 'Number of Tenders'},
+        color='Tender Count',
         color_continuous_scale='viridis'
     )
     
     fig.update_layout(
-        xaxis_title="Deadline Date",
+        xaxis_title="Deadline Month",
         yaxis_title="Number of Tenders",
-        height=300,
+        height=400,
         showlegend=False
     )
     
